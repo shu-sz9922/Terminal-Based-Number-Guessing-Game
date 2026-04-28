@@ -1,1 +1,2 @@
-# CMPSC-132-Final-Project-
+# CMPSC-132-Final-Project
+Shu Zhu
