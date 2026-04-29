@@ -185,7 +185,7 @@ def main():
     attUpperBd = limForAtt(mode)
     
     iniNum = randomNum()
-    print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
+    #print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
     
     attemptCount = 0 #Attempt Tracking
     status = False
