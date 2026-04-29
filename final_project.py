@@ -60,10 +60,10 @@ def randomNum(rangeUBd):
 ##    User is allowed multiple attempts to guess the number
 def userInput():
     while True:
-        guess = input("Enter your number: ".strip().lower()
+        guess = input("Enter your number: ").strip().lower()
 
         if guess == "exit":
-            print("Exit Guessing...")#
+            print("Exit Guessing...")
             return "exit"
     
         try:
@@ -95,19 +95,17 @@ def feedback(iniNum, guess):
     else:
         print("Correct!")
         return True
+    
 
 #move status check here for better adding dificult mode & attempt limitation
 def statusChk(iniNum, attUpperBd):
     attemptCount = 0
-    gameOver = False
-    
-    while not gameOver:
+    while True:
         guess = userInput()
 
         #C1: exit
         if guess == "exit" :
-            print("See you next time!")
-            gameOver = True
+            return "exit"
 
         else:
             attemptCount += 1
@@ -115,30 +113,34 @@ def statusChk(iniNum, attUpperBd):
 
             #2: Correct guess
             if correct:
-                print(f"Your total number of guess is: {attemptCount}\n"+'-'*20)
+                print(f"Your total number of guess(es) is: {attemptCount}\n"+'='*40)
                 gameOver = True
+                return
 
             #3: Limit reach
             elif attemptCount >= attUpperBd:
                 print(f"Challenge failed! You have reached the limit of attempts: {attUpperBd}\n"
                       +f"The correct number is {iniNum}.\n"
                       +'-'*20)
-                gameOver = True
-        
-            
+                return
+      
 
 #. Allow replay v
-def anotherAttempt():
+def anotherAttempt():#return gameOver val
     while True:
         choice = input("Do you want to play it again? ('Y'/'N')\n").strip().lower()
 
+        #C1: exit
+        if choice == "exit" :
+            return "exit"
+        
         if choice == "y":
             print("Got it! Loading a new round ... \n"+'='*40)
-            return True
+            return False
         
         elif choice == "n":
             print("See you next time!")
-            return False
+            return True
 
         else:
             print("Please enter a valid character!\n")
@@ -154,52 +156,70 @@ def limForAtt():
                    + "'N' for No\n"
                        ).strip().lower()
 
-        if setOrN == "n":
-            decision = True
-            print("Attempts limit set to 100~\n")
-            return 100
-                
-        elif setOrN == "y":
-            print("Enter attempt limit:")
-            atUpperBd = userInput()
+        #C1: exit
+        if setOrN == "exit" :
+            return "exit"
 
-            if atUpperBd == "exit":
-                print("Attempts limit set to 100~\n")
-                return 100
-
-            print(f"Sure! Your aim to guess within {atUpperBd} times.")
-            return atUpperBd
-            
         else:
-            print("Please enter a valid character!\n")
+            if setOrN == "n":
+                decision = True
+                print("Attempts limit set to 100.")
+                return 100
+                    
+            elif setOrN == "y":
+                #print("Enter attempt limit:")
+                atUpperBd = userInput()
+
+                #NEED exitChk() !!!
+                if atUpperBd == "exit":
+                    return "exit"
+
+                
+                print(f"Sure! Your goal is to guess within {atUpperBd} times.")
+                return atUpperBd
+            
+            else:
+                print("Please enter a valid character!\n")
 
 
 #. Difficulty levels (easy, medium, hard)v
 def setLv():
-    decision = False
-    while not decision:
+    while True:
         setOrN = input(f"Set difficulty to start: \n"
                    + "'1' for Easy: Guess a number from 1 to 10\n"
                    + "'2' for Medium: Guess a number from 1 to 100\n"
                    + "'3' for Hard: Guess a number from 1 to 1000!\n"
-                       ).strip().lower())
+                       ).strip().lower()
 
-        if setOrN == "1":
-            decision = True
-            print("Goal: Guess a number from 1 to 10! \n")
-            return 10
-        elif setOrN == "2":
-            decision = True
-            print("Goal: Guess a number from 1 to 100! \n")
-            return 100  
-        elif setOrN == "3":
-            decision = True
-            print("Goal: Guess a number from 1 to 1000! \n")
-            return 1000
+        #C1 exit
+        if setOrN == "exit" :
+            return "exit"
 
-        else:
-            print("Please enter a valid character!\n")
-            
+        else:  
+            if setOrN == "1":
+                decision = True
+                print("Goal: Guess a number from 1 to 10! \n")
+                return 10
+            elif setOrN == "2":
+                decision = True
+                print("Goal: Guess a number from 1 to 100! \n")
+                return 100  
+            elif setOrN == "3":
+                decision = True
+                print("Goal: Guess a number from 1 to 1000! \n")
+                return 1000
+
+            else:
+                print("Please enter a valid character!\n")
+
+
+#check for exit signal and print ending
+def exitChk(val):
+    if val == "exit":
+        print("See you next time!")
+        return True
+    return False
+
 
 ## ====================
 def main():
@@ -207,24 +227,32 @@ def main():
 
     while not gameOver:
         print ("Welcome to our Number Guessing Game!\n"
-               +'-'*40
-               + '\n'
                +"Tips: You can exit the game by entering 'Exit'\n"
-               )
+               +'-'*40)
         
-
         rangeUBd = setLv()
+        if exitChk(rangeUBd):
+            return None
+            
         attUpperBd = limForAtt()
+        if exitChk(attUpperBd):
+            return None
 
-        print(f"Goal: Guess a number from 1 to {rangeUBd} within {attUpperBd} attemps!\n"
-              + "==Are you ready? Let's go!==") 
+        print(f"Goal: Guess a number from 1 to {rangeUBd} within {attUpperBd} attempts!\n"
+              + "Are you ready? Let's go!\n"
+              +'-'*40) 
 
         iniNum = randomNum(rangeUBd)
         #print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
         
-        statusChk(iniNum, attUpperBd)
+        status = statusChk(iniNum, attUpperBd)
+        if exitChk(status):
+            return None
                 
         gameOver = anotherAttempt()
+        if exitChk(gameOver):
+            return None
+        
 
 if __name__ == "__main__":
     main()
