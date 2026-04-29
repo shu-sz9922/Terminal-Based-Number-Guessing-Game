@@ -1,5 +1,6 @@
-## cmpsc132 final project
+##CMPSC 132 Final project
 ##Shu Zhu
+
 '''
 3. Number Guessing Game (Single Player, Terminal-Based)
 
@@ -61,14 +62,18 @@ def userInput():
     guess = ""
 
     while not guess.isdigit():
-        guess = input("Enter your guess: ")
-
+        guess = input("Enter your guess from 1-100: ")
+        guess = (guess.strip().lower())
+        
         try:
+            if guess == "exit":
+                print("Exit Guessing...")#
+                return guess
             guess = int(guess.strip())
+            return guess
         except ValueError:
             print("Please enter a valid integer!")
-        else:
-            return guess
+        
 
 ##· Provide feedback:
 ##    o "Too high": If the guess is greater than the number generated, it prompts the
@@ -94,16 +99,22 @@ def main():
     #for check purpose
     print(iniNum)
     
-    guessCount = 0 #Attempt Tracking
+    attemptCount = 0 #Attempt Tracking
     status = False
+    guess = 0
     
     while status != True:
         guess = userInput()
+        if guess == "exit" :
+            print("See you next time!")
+            return
         
-        if feedback(iniNum, guess) == False:
-            guessCount += 1
-        else:
-            print(f"Your total number of guess is: {guessCount}")
+        status = feedback(iniNum, guess)
+        attemptCount += 1
+            
+        if status:
+            print(f"Your total number of guess is: {attemptCount}")
+            
     
 
 if __name__ == "__main__":
