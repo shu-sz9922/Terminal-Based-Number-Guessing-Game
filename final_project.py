@@ -41,7 +41,7 @@ Implementation Details
 . Store and display the number of attempts v
 
 Suggested Enhancements (Optional)
-. Difficulty levels (easy, medium, hard)
+. Difficulty levels (easy, medium, hard)v
 . Limit number of attempts v
 . Allow replay v
 '''
@@ -50,8 +50,8 @@ import random
 
 ##. Random Number Generation:
 ##    Game starts by a random number generation by the program (e.g., between 1 and 100)
-def randomNum():
-    return random.randint(1,100)
+def randomNum(rangeUBd):
+    return random.randint(1,rangeUBd)
 
 ##. User Input:
 ##    Player guesses the number
@@ -63,7 +63,7 @@ def userInput():
     validNum = False
 
     while not validNum:
-        guess = input("Enter your number from 1-100: ")
+        guess = input("Enter your number: ")
         guess = (guess.strip().lower())
         
         try:
@@ -72,7 +72,7 @@ def userInput():
                 return
             
             guess = int(guess.strip())
-            if guess>=1 and guess<=100:
+            if guess>=1:
                 return guess
             
             else:
@@ -102,8 +102,7 @@ def feedback(iniNum, guess):
 
 #move status check here for better adding dificult mode & attempt limitation
 def statusChk(iniNum, attemptCount, status, guess, attUpperBd):
-    
-    
+
     while status != True:
         guess = userInput()
 
@@ -151,9 +150,8 @@ def anotherAttempt():
 def limForAtt(mode):
     decision = False
     
-    
     while not decision:
-        setOrN = input(f"Wanna set a limited number of attempts in advance?\n"
+        setOrN = input(f"Wanna set a target for the highest number of attempts to challenge yourself?\n"
                    + "The number of attempts could be up to 100!\n"
                    + "'Y' for Yes"
                    + ' '*6
@@ -162,30 +160,64 @@ def limForAtt(mode):
 
         if setOrN == "n":
             decision = True
-            print("The number of attempts could be up to 100~\n"+'-'*20)
+            print("The number of attempts would be up to 100~\n")
             return 100
                 
         elif setOrN == "y":
             #
             print("What's the limitation you wanna set?")
-            upperBd = userInput()
+            atUpperBd = userInput()
             decision = True
-            return upperBd
+            print(f"Sure! Your plan to guess the correct number within {atUpperBd} times.")
+            return atUpperBd
             
         else:
             print("Please enter a valid character!\n")
-    
 
+
+#. Difficulty levels (easy, medium, hard)v
+def setLv():
+    decision = False
+    while not decision:
+        setOrN = input(f"Set the Difficulty levels to start: \n"
+                   + "'1' for Easy: Guess a number from 1 to 10\n"
+                   + "'2' for Medium: Guess a number from 1 to 100\n"
+                   + "'3' for Hard: Guess a number from 1 to 1000 within at most 100 attempts!\n")
+        setOrN = (setOrN.strip().lower())
+
+        if setOrN == "1":
+            decision = True
+            print("Goal: Guess a number from 1 to 10! \n")
+            return 10
+        elif setOrN == "2":
+            decision = True
+            print("Goal: Guess a number from 1 to 100! \n")
+            return 100  
+        elif setOrN == "3":
+            decision = True
+            print("Goal: Guess a number from 1 to 1000! \n")
+            return 1000
+
+        else:
+            print("Please enter a valid character!\n")
+            
 
 ## ====================
 def main():
-    print ("Welcome to our **Number Guessing Game**\n"+'-'*40)
+    print ("Welcome to our Number Guessing Game!\n"
+           +'-'*40
+           + '\n'
+           +"Tips: You can exit the game by entering 'Exit'\n"
+           )
     mode = ""
 
+    rangeUBd = setLv()
     attUpperBd = limForAtt(mode)
-    
-    iniNum = randomNum()
-    #print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
+
+    print(f"Goal: Guess a number from 1 to {rangeUBd} within {attUpperBd} attemps!\n"
+          + "==Are you ready? Let's go!==") 
+    iniNum = randomNum(rangeUBd)
+    print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
     
     attemptCount = 0 #Attempt Tracking
     status = False
