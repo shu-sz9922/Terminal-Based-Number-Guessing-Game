@@ -59,18 +59,14 @@ def randomNum(rangeUBd):
 ##    and convert to int())
 ##    User is allowed multiple attempts to guess the number
 def userInput():
-    guess = ""
-    validNum = False
+    while True:
+        guess = input("Enter your number: ".strip().lower()
 
-    while not validNum:
-        guess = input("Enter your number: ")
-        guess = (guess.strip().lower())
-        
+        if guess == "exit":
+            print("Exit Guessing...")#
+            return "exit"
+    
         try:
-            if guess == "exit":
-                print("Exit Guessing...")#
-                return "exit"
-            
             guess = int(guess)
             if guess>=1:
                 return guess
@@ -125,7 +121,7 @@ def statusChk(iniNum, attUpperBd):
             #3: Limit reach
             elif attemptCount >= attUpperBd:
                 print(f"Challenge failed! You have reached the limit of attempts: {attUpperBd}\n"
-                      +f"The corrct number is {iniNum}.\n"
+                      +f"The correct number is {iniNum}.\n"
                       +'-'*20)
                 gameOver = True
         
@@ -133,50 +129,45 @@ def statusChk(iniNum, attUpperBd):
 
 #. Allow replay v
 def anotherAttempt():
-    anotherOrN = ''
-    decision = False
+    while True:
+        choice = input("Do you want to play it again? ('Y'/'N')\n").strip().lower()
 
-    while not decision:
-        anotherOrN = input("Do you want to play it again? ('Y'/'N')\n")
-        anotherOrN = (anotherOrN.strip().lower())
-
-        if anotherOrN == "n":
-            decision = True
+        if choice == "y":
+            print("Got it! Loading a new round ... \n"+'='*40)
+            return True
+        
+        elif choice == "n":
             print("See you next time!")
             return False
-            
-        elif anotherOrN == "y":
-            decision = True
-            print("Got it! New round loading... \n"+'='*40)
-            return True
 
         else:
             print("Please enter a valid character!\n")
 
 
 #. Limit number of attempts v
-def limForAtt(mode):
-    decision = False
-    
-    while not decision:
+def limForAtt():
+    while True:
         setOrN = input(f"Wanna set a target for the highest number of attempts to challenge yourself?\n"
                    + "The number of attempts could be up to 100!\n"
                    + "'Y' for Yes"
                    + ' '*6
-                   + "'N' for No\n")
-        setOrN = (setOrN.strip().lower())
+                   + "'N' for No\n"
+                       ).strip().lower()
 
         if setOrN == "n":
             decision = True
-            print("The number of attempts would be up to 100~\n")
+            print("Attempts limit set to 100~\n")
             return 100
                 
         elif setOrN == "y":
-            #
-            print("What's the limitation you wanna set?")
+            print("Enter attempt limit:")
             atUpperBd = userInput()
-            decision = True
-            print(f"Sure! Your plan to guess the correct number within {atUpperBd} times.")
+
+            if atUpperBd == "exit":
+                print("Attempts limit set to 100~\n")
+                return 100
+
+            print(f"Sure! Your aim to guess within {atUpperBd} times.")
             return atUpperBd
             
         else:
@@ -187,11 +178,11 @@ def limForAtt(mode):
 def setLv():
     decision = False
     while not decision:
-        setOrN = input(f"Set the Difficulty levels to start: \n"
+        setOrN = input(f"Set difficulty to start: \n"
                    + "'1' for Easy: Guess a number from 1 to 10\n"
                    + "'2' for Medium: Guess a number from 1 to 100\n"
-                   + "'3' for Hard: Guess a number from 1 to 1000!\n")
-        setOrN = (setOrN.strip().lower())
+                   + "'3' for Hard: Guess a number from 1 to 1000!\n"
+                       ).strip().lower())
 
         if setOrN == "1":
             decision = True
@@ -223,7 +214,7 @@ def main():
         
 
         rangeUBd = setLv()
-        attUpperBd = limForAtt(mode)
+        attUpperBd = limForAtt()
 
         print(f"Goal: Guess a number from 1 to {rangeUBd} within {attUpperBd} attemps!\n"
               + "==Are you ready? Let's go!==") 
@@ -231,8 +222,7 @@ def main():
         iniNum = randomNum(rangeUBd)
         #print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
         
-        
-        status = statusChk(iniNum, attUpperBd)
+        statusChk(iniNum, attUpperBd)
                 
         gameOver = anotherAttempt()
 
