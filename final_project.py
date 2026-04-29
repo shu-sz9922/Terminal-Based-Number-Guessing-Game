@@ -69,9 +69,9 @@ def userInput():
         try:
             if guess == "exit":
                 print("Exit Guessing...")#
-                return
+                return "exit"
             
-            guess = int(guess.strip())
+            guess = int(guess)
             if guess>=1:
                 return guess
             
@@ -101,27 +101,35 @@ def feedback(iniNum, guess):
         return True
 
 #move status check here for better adding dificult mode & attempt limitation
-def statusChk(iniNum, attemptCount, status, guess, attUpperBd):
-
-    while status != True:
+def statusChk(iniNum, attUpperBd):
+    attemptCount = 0
+    gameOver = False
+    
+    while not gameOver:
         guess = userInput()
 
+        #C1: exit
         if guess == "exit" :
             print("See you next time!")
-            return
-        
-        status = feedback(iniNum, guess)
-        attemptCount += 1
+            gameOver = True
 
-        if attemptCount == attUpperBd:
-            status = True
-            print(f"Challenge failed! You have reached the limit of attempts: {attUpperBd}\n"
-                  +f"The corrct number is {iniNum}.\n"
-                  +'-'*20)
-            return
-    
-        if status:
-            print(f"Your total number of guess is: {attemptCount}\n"+'-'*20)
+        else:
+            attemptCount += 1
+            correct  = feedback(iniNum, guess)
+
+            #2: Correct guess
+            if correct:
+                print(f"Your total number of guess is: {attemptCount}\n"+'-'*20)
+                gameOver = True
+
+            #3: Limit reach
+            elif attemptCount >= attUpperBd:
+                print(f"Challenge failed! You have reached the limit of attempts: {attUpperBd}\n"
+                      +f"The corrct number is {iniNum}.\n"
+                      +'-'*20)
+                gameOver = True
+        
+            
 
 #. Allow replay v
 def anotherAttempt():
@@ -135,12 +143,12 @@ def anotherAttempt():
         if anotherOrN == "n":
             decision = True
             print("See you next time!")
-            return
+            return False
             
         elif anotherOrN == "y":
             decision = True
             print("Got it! New round loading... \n"+'='*40)
-            return main()
+            return True
 
         else:
             print("Please enter a valid character!\n")
@@ -182,7 +190,7 @@ def setLv():
         setOrN = input(f"Set the Difficulty levels to start: \n"
                    + "'1' for Easy: Guess a number from 1 to 10\n"
                    + "'2' for Medium: Guess a number from 1 to 100\n"
-                   + "'3' for Hard: Guess a number from 1 to 1000 within at most 100 attempts!\n")
+                   + "'3' for Hard: Guess a number from 1 to 1000!\n")
         setOrN = (setOrN.strip().lower())
 
         if setOrN == "1":
@@ -204,28 +212,29 @@ def setLv():
 
 ## ====================
 def main():
-    print ("Welcome to our Number Guessing Game!\n"
-           +'-'*40
-           + '\n'
-           +"Tips: You can exit the game by entering 'Exit'\n"
-           )
-    mode = ""
+    gameOver = False
 
-    rangeUBd = setLv()
-    attUpperBd = limForAtt(mode)
+    while not gameOver:
+        print ("Welcome to our Number Guessing Game!\n"
+               +'-'*40
+               + '\n'
+               +"Tips: You can exit the game by entering 'Exit'\n"
+               )
+        
 
-    print(f"Goal: Guess a number from 1 to {rangeUBd} within {attUpperBd} attemps!\n"
-          + "==Are you ready? Let's go!==") 
-    iniNum = randomNum(rangeUBd)
-    print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
-    
-    attemptCount = 0 #Attempt Tracking
-    status = False
-    guess = ''
-    
-    status = statusChk(iniNum, attemptCount, status, guess, attUpperBd)
-            
-    anotherAttempt()
+        rangeUBd = setLv()
+        attUpperBd = limForAtt(mode)
+
+        print(f"Goal: Guess a number from 1 to {rangeUBd} within {attUpperBd} attemps!\n"
+              + "==Are you ready? Let's go!==") 
+
+        iniNum = randomNum(rangeUBd)
+        #print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
+        
+        
+        status = statusChk(iniNum, attUpperBd)
+                
+        gameOver = anotherAttempt()
 
 if __name__ == "__main__":
     main()
