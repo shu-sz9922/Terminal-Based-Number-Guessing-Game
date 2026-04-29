@@ -42,7 +42,7 @@ Implementation Details
 
 Suggested Enhancements (Optional)
 . Difficulty levels (easy, medium, hard)
-. Limit number of attempts
+. Limit number of attempts v
 . Allow replay v
 '''
 import random
@@ -60,46 +60,27 @@ def randomNum():
 ##    User is allowed multiple attempts to guess the number
 def userInput():
     guess = ""
+    validNum = False
 
-    while not guess.isdigit():
-        guess = input("Enter your guess from 1-100: ")
+    while not validNum:
+        guess = input("Enter your number from 1-100: ")
         guess = (guess.strip().lower())
         
         try:
             if guess == "exit":
                 print("Exit Guessing...")#
-                return guess
+                return
+            
             guess = int(guess.strip())
-            return guess
+            if guess>=1 and guess<=100:
+                return guess
+            
+            else:
+                print("Please enter a valid integer!")
+                
         except ValueError:
             print("Please enter a valid integer!")
 
-#. Allow replay v
-def anotherAttempt():
-    anotherOrN = ''
-    decision = False
-
-    while not decision:
-        anotherOrN = input("Do you want to replay? ('Y'/'N')\n")
-        anotherOrN = (anotherOrN.strip().lower())
-
-        try:
-            if anotherOrN == "n":
-                decision = True
-                print("See you next time!")
-                return
-                
-            elif anotherOrN == "y":
-                decision = True
-
-                print("Got it! New round loading... \n"+'='*20)
-                return main()
-
-            else:
-                print("Please enter a valid character!\n")
-                
-        except ValueError:
-            print("Please enter a valid character!")
 
 ##· Provide feedback:
 ##    o "Too high": If the guess is greater than the number generated, it prompts the
@@ -119,27 +100,98 @@ def feedback(iniNum, guess):
         print("Correct!")
         return True
 
-
-def main():
-    iniNum = randomNum()
-    #for check purpose
-    print(iniNum)
+#move status check here for better adding dificult mode & attempt limitation
+def statusChk(iniNum, attemptCount, status, guess, attUpperBd):
     
-    attemptCount = 0 #Attempt Tracking
-    status = False
-    guess = 0
     
     while status != True:
         guess = userInput()
+
         if guess == "exit" :
             print("See you next time!")
             return
         
         status = feedback(iniNum, guess)
         attemptCount += 1
-            
+
+        if attemptCount == attUpperBd:
+            status = True
+            print(f"Challenge failed! You have reached the limit of attempts: {attUpperBd}\n"
+                  +f"The corrct number is {iniNum}.\n"
+                  +'-'*20)
+            return
+    
         if status:
             print(f"Your total number of guess is: {attemptCount}\n"+'-'*20)
+
+#. Allow replay v
+def anotherAttempt():
+    anotherOrN = ''
+    decision = False
+
+    while not decision:
+        anotherOrN = input("Do you want to play it again? ('Y'/'N')\n")
+        anotherOrN = (anotherOrN.strip().lower())
+
+        if anotherOrN == "n":
+            decision = True
+            print("See you next time!")
+            return
+            
+        elif anotherOrN == "y":
+            decision = True
+            print("Got it! New round loading... \n"+'='*40)
+            return main()
+
+        else:
+            print("Please enter a valid character!\n")
+
+
+#. Limit number of attempts v
+def limForAtt(mode):
+    decision = False
+    
+    
+    while not decision:
+        setOrN = input(f"Wanna set a limited number of attempts in advance?\n"
+                   + "The number of attempts could be up to 100!\n"
+                   + "'Y' for Yes"
+                   + ' '*6
+                   + "'N' for No\n")
+        setOrN = (setOrN.strip().lower())
+
+        if setOrN == "n":
+            decision = True
+            print("The number of attempts could be up to 100~\n"+'-'*20)
+            return 100
+                
+        elif setOrN == "y":
+            #
+            print("What's the limitation you wanna set?")
+            upperBd = userInput()
+            decision = True
+            return upperBd
+            
+        else:
+            print("Please enter a valid character!\n")
+    
+
+
+## ====================
+def main():
+    print ("Welcome to our **Number Guessing Game**\n"+'-'*40)
+    mode = ""
+
+    attUpperBd = limForAtt(mode)
+    
+    iniNum = randomNum()
+    print(iniNum) #for check purpose, TO BE DELETED after finishing the optionals!!!
+    
+    attemptCount = 0 #Attempt Tracking
+    status = False
+    guess = ''
+    
+    status = statusChk(iniNum, attemptCount, status, guess, attUpperBd)
             
     anotherAttempt()
 
