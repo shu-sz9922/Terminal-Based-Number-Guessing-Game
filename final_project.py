@@ -43,7 +43,7 @@ Implementation Details
 Suggested Enhancements (Optional)
 . Difficulty levels (easy, medium, hard)
 . Limit number of attempts
-. Allow replay
+. Allow replay v
 '''
 import random
 
@@ -73,7 +73,33 @@ def userInput():
             return guess
         except ValueError:
             print("Please enter a valid integer!")
-        
+
+#. Allow replay v
+def anotherAttempt():
+    anotherOrN = ''
+    decision = False
+
+    while not decision:
+        anotherOrN = input("Do you want to replay? ('Y'/'N')\n")
+        anotherOrN = (anotherOrN.strip().lower())
+
+        try:
+            if anotherOrN == "n":
+                decision = True
+                print("See you next time!")
+                return
+                
+            elif anotherOrN == "y":
+                decision = True
+
+                print("Got it! New round loading... \n"+'='*20)
+                return main()
+
+            else:
+                print("Please enter a valid character!\n")
+                
+        except ValueError:
+            print("Please enter a valid character!")
 
 ##· Provide feedback:
 ##    o "Too high": If the guess is greater than the number generated, it prompts the
@@ -113,9 +139,9 @@ def main():
         attemptCount += 1
             
         if status:
-            print(f"Your total number of guess is: {attemptCount}")
+            print(f"Your total number of guess is: {attemptCount}\n"+'-'*20)
             
-    
+    anotherAttempt()
 
 if __name__ == "__main__":
     main()
