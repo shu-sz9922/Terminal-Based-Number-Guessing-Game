@@ -1,4 +1,4 @@
-# CMPSC-132-Final-Project: A Terminal-Based
+# 132 Project: A Terminal-Based Number-guessing Game
 
 ## Introduction
 
