@@ -1,5 +1,5 @@
-# CMPSC 132 Project Code: A Terminal-Based Number-guessing Game
-
+# A Terminal-Based Number-Guessing Game
+#CMPSC 132 Project Code
 ## Introduction
 
 This project implements a single-player number-guessing game in Python. The objective is for the player to guess a randomly generated number using system feedback. The project focuses on practicing core programming concepts such as conditionals, logic building, loops, functions, and user input validation.
