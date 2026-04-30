@@ -1,9 +1,8 @@
 # CMPSC-132-Final-Project: A Terminal-Based
-Shu Zhu
 
 ## Introduction
 
-This project implements a single-player number-guessing game in Python. The objective is for the player to guess a randomly generated number using system feedbacks. The project focuses on practicing core programming concepts such as conditionals, logic building, loops, functions, and user input validation.
+This project implements a single-player number-guessing game in Python. The objective is for the player to guess a randomly generated number using system feedback. The project focuses on practicing core programming concepts such as conditionals, logic building, loops, functions, and user input validation.
 
 
 ## Program Design
